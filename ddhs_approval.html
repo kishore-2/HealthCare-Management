@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDHS Approval System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .approve {
+            background-color: #28a745;
+            color: white;
+        }
+        .approve:hover {
+            background-color: #218838;
+        }
+        .reject {
+            background-color: #dc3545;
+            color: white;
+        }
+        .reject:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>DDHS Approval System - Pending Requests</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Requester</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="requestTable">
+                <!-- Pending requests will be dynamically loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let requests = [
+            { id: 1, itemName: "Paracetamol", quantity: 50, requester: "PHC", status: "Pending" },
+            { id: 2, itemName: "Syringes", quantity: 30, requester: "Sub-Center", status: "Pending" },
+            { id: 3, itemName: "Gloves", quantity: 100, requester: "PHC", status: "Pending" }
+        ];
+
+        function loadRequests() {
+            const tableBody = document.getElementById("requestTable");
+            tableBody.innerHTML = "";
+            requests.forEach(request => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${request.itemName}</td>
+                        <td>${request.quantity}</td>
+                        <td>${request.requester}</td>
+                        <td id="status-${request.id}">${request.status}</td>
+                        <td>
+                            <button class="approve" onclick="updateStatus(${request.id}, 'Approved')">Approve</button>
+                            <button class="reject" onclick="updateStatus(${request.id}, 'Rejected')">Reject</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateStatus(id, newStatus) {
+            const request = requests.find(req => req.id === id);
+            if (request) {
+                request.status = newStatus;
+                document.getElementById(`status-${id}`).textContent = newStatus;
+            }
+        }
+
+        loadRequests();
+    </script>
+</body>
+</html>

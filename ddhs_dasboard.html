@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDHS Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+        select {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>DDHS Dashboard - Doctor Attendance</h2>
+        <label for="statusFilter">Filter by Status:</label>
+        <select id="statusFilter">
+            <option value="">All</option>
+            <option value="P">Present</option>
+            <option value="AB">Absent</option>
+            <option value="A">Available</option>
+        </select>
+        <table>
+            <thead>
+                <tr>
+                    <th>Doctor Name</th>
+                    <th>Doctor ID</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTable">
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        const attendanceData = [
+            { doctorName: "Dr. John Doe", doctorId: "D001", status: "P", timestamp: "2025-03-06 10:00 AM" },
+            { doctorName: "Dr. Alice Smith", doctorId: "D002", status: "AB", timestamp: "2025-03-06 09:30 AM" },
+            { doctorName: "Dr. Bob Williams", doctorId: "D003", status: "A", timestamp: "2025-03-06 11:15 AM" }
+        ];
+
+        function loadAttendanceRecords(filterStatus = "") {
+            const tableBody = document.getElementById("attendanceTable");
+            tableBody.innerHTML = "";
+            
+            const filteredData = filterStatus ? attendanceData.filter(record => record.status === filterStatus) : attendanceData;
+            
+            filteredData.forEach(record => {
+                const row = `<tr>
+                    <td>${record.doctorName}</td>
+                    <td>${record.doctorId}</td>
+                    <td>${record.status}</td>
+                    <td>${record.timestamp}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        document.getElementById("statusFilter").addEventListener("change", function() {
+            loadAttendanceRecords(this.value);
+        });
+
+        loadAttendanceRecords();
+    </script>
+</body>
+</html>

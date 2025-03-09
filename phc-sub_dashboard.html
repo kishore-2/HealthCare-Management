@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC/Sub-Center Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>PHC/Sub-Center Dashboard - Inventory & Requests</h2>
+        
+        <h3>Available Inventory</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTable">
+                <!-- Inventory items will be dynamically loaded here -->
+            </tbody>
+        </table>
+
+        <h3>Request Medical Resources</h3>
+        <form id="requestForm">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" required>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" required>
+
+            <label for="requester">Requester (PHC/Sub-Center):</label>
+            <select id="requester" required>
+                <option value="PHC">PHC</option>
+                <option value="Sub-Center">Sub-Center</option>
+            </select>
+
+            <button type="submit">Submit Request</button>
+        </form>
+
+        <h3>Pending Requests</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Requester</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="requestTable">
+                <!-- Request items will be dynamically loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const inventory = [
+            { itemName: "Paracetamol", quantity: 100 },
+            { itemName: "Gloves", quantity: 200 },
+            { itemName: "Syringes", quantity: 150 }
+        ];
+
+        const requests = [];
+
+        function loadInventory() {
+            const tableBody = document.getElementById("inventoryTable");
+            tableBody.innerHTML = "";
+            inventory.forEach(item => {
+                tableBody.innerHTML += `<tr><td>${item.itemName}</td><td>${item.quantity}</td></tr>`;
+            });
+        }
+
+        function loadRequests() {
+            const tableBody = document.getElementById("requestTable");
+            tableBody.innerHTML = "";
+            requests.forEach(request => {
+                tableBody.innerHTML += `<tr><td>${request.itemName}</td><td>${request.quantity}</td><td>${request.requester}</td><td>${request.status}</td></tr>`;
+            });
+        }
+
+        document.getElementById("requestForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const itemName = document.getElementById("itemName").value;
+            const quantity = document.getElementById("quantity").value;
+            const requester = document.getElementById("requester").value;
+
+            if (!itemName || !quantity || !requester) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            const newRequest = {
+                itemName,
+                quantity,
+                requester,
+                status: "Pending Approval"
+            };
+            requests.push(newRequest);
+            loadRequests();
+            document.getElementById("requestForm").reset();
+        });
+
+        loadInventory();
+        loadRequests();
+    </script>
+</body>
+</html>
