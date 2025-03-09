@@ -43,7 +43,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations - Adjust these paths as needed ######
-          app_location: "www"           # Change this to "www" if your static files are located in the www folder
+          app_location: "www/"           # Change this to "www" if your static files are located in the www folder
           api_location: ""              # Specify this if you have an API folder; leave empty otherwise
           output_location: ""           # Specify if your build outputs static files to a folder; leave empty if not applicable
           github_id_token: ${{ steps.idtoken.outputs.result }}
