@@ -42,7 +42,11 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_BEACH_06377DA00 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - Adjust these paths to match your project structure ######\n          app_location: "www/"           # Folder containing your static site (change to "www" if your files are in a 'www' folder)\n          api_location: ""            # If you have an API folder, specify it here; otherwise leave empty\n          output_location: ""         # Folder where your site build outputs the static files\n          github_id_token: ${{ steps.idtoken.outputs.result }}
+          ###### Repository/Build Configurations - Adjust these paths as needed ######
+          app_location: "www"           # Change this to "www" if your static files are located in the www folder
+          api_location: ""              # Specify this if you have an API folder; leave empty otherwise
+          output_location: ""           # Specify if your build outputs static files to a folder; leave empty if not applicable
+          github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
@@ -51,7 +55,6 @@ jobs:
     name: Close Pull Request Job
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_BEACH_06377DA00 }}
