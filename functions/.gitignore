@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Local settings (do not commit secrets)
+local.settings.json
+
+# Logs
+*.log
+
+# VS Code settings
+.vscode/
+
+# Others
+npm-debug.log*

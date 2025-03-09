@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDHS Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 900px; background: white; padding: 20px; border-radius: 10px; margin: auto; }
+        h2 { color: #333; }
+        .nav { margin-bottom: 20px; }
+        .nav a, .nav button { margin-right: 15px; padding: 10px; background-color: #007bff; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; }
+        .nav a:hover, .nav button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>DDHS Dashboard</h2>
+        <div class="nav">
+            <a href="doctor_attendance_form.html">Submit Attendance</a>
+            <a href="ddhs_approval_system.html">Approval System</a>
+            <button onclick="fetchAttendance()">Refresh Attendance</button>
+        </div>
+        <h3>Doctor Attendance Records</h3>
+        <table id="attendanceTable">
+            <thead>
+                <tr>
+                    <th>Doctor ID</th>
+                    <th>Doctor Name</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        function fetchAttendance() {
+            fetch("https://healthcare-function.azurewebsites.net/api/getAttendance")
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById("attendanceTable").querySelector("tbody");
+                tbody.innerHTML = "";
+                data.forEach(record => {
+                    let row = `<tr>
+                        <td>${record.DoctorID}</td>
+                        <td>${record.DoctorName}</td>
+                        <td>${record.Status}</td>
+                        <td>${record.Timestamp}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error("Error fetching attendance:", error));
+        }
+        fetchAttendance();
+    </script>
+</body>
+</html>

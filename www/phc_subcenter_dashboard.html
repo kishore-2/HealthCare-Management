@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC/Sub-Center Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 900px; background: white; padding: 20px; border-radius: 10px; margin: auto; }
+        h2 { color: #333; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 15px; padding: 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .nav a:hover { background-color: #0056b3; }
+        form { margin-top: 20px; }
+        input, select, button { padding: 10px; margin: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>PHC/Sub-Center Dashboard</h2>
+        <div class="nav">
+            <a href="doctor_attendance_form.html">Submit Attendance</a>
+        </div>
+        <h3>Resource Request Form</h3>
+        <form id="requestForm">
+            <input type="text" id="itemName" placeholder="Item Name" required>
+            <input type="number" id="quantity" placeholder="Quantity" required>
+            <select id="requester" required>
+                <option value="">Select Requester</option>
+                <option value="PHC">PHC</option>
+                <option value="Sub-Center">Sub-Center</option>
+            </select>
+            <button type="submit">Submit Request</button>
+        </form>
+        <h3>Pending Resource Requests</h3>
+        <table id="requestTable">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Requester</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById("requestForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const itemName = document.getElementById("itemName").value;
+            const quantity = document.getElementById("quantity").value;
+            const requester = document.getElementById("requester").value;
+            
+            fetch("https://healthcare-function.azurewebsites.net/api/submitResourceRequest", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ item_name: itemName, quantity: quantity, requester: requester })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadRequests();
+                document.getElementById("requestForm").reset();
+            })
+            .catch(error => console.error("Error submitting request:", error));
+        });
+
+        function loadRequests() {
+            fetch("https://healthcare-function.azurewebsites.net/api/getResourceRequests")
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById("requestTable").querySelector("tbody");
+                tbody.innerHTML = "";
+                data.forEach(request => {
+                    let row = `<tr>
+                        <td>${request.RequestID}</td>
+                        <td>${request.ItemName}</td>
+                        <td>${request.Quantity}</td>
+                        <td>${request.Requester}</td>
+                        <td>${request.Status}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error("Error fetching requests:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadRequests();
+        });
+    </script>
+</body>
+</html>

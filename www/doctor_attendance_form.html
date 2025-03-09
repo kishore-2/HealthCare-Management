@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Attendance Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 400px; background: white; padding: 20px; border-radius: 10px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input, select, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Doctor Attendance Form</h2>
+        <form id="attendanceForm">
+            <input type="text" id="doctorName" placeholder="Doctor Name" required>
+            <input type="text" id="doctorId" placeholder="Doctor ID" required>
+            <select id="status" required>
+                <option value="">Select Status</option>
+                <option value="P">Present</option>
+                <option value="AB">Absent</option>
+                <option value="A">Available</option>
+            </select>
+            <button type="submit">Submit Attendance</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('attendanceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const doctorName = document.getElementById('doctorName').value;
+            const doctorId = document.getElementById('doctorId').value;
+            const status = document.getElementById('status').value;
+            
+            if (!doctorName || !doctorId || !status) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            fetch('https://healthcare-function.azurewebsites.net/api/submitAttendance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ doctor_name: doctorName, doctor_id: doctorId, status: status })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                document.getElementById('attendanceForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting attendance.');
+            });
+        });
+    </script>
+</body>
+</html>
